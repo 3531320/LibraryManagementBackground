@@ -3,8 +3,12 @@ const conn = require('../mysql.js');
 const router = express.Router();
 //创建一个路由容器
 router.get('/getpost', (req, res) => {
+  let name = req.query.name;
   let sql = "select * from books";
-  conn.query(sql, (error, result) => {
+  if(name){
+    sql = "select * from books where name like ? ";
+  }
+  conn.query(sql, ["%"+name+"%"],(error, result) => {
     if (error) return "查询失败"
     res.send({
       msg: result
@@ -26,10 +30,10 @@ router.post("/addbook", (req, res) => {
   })
 });
 
-router.delete("/delbook", (req, res) => {
-  let id = req.body.id;
-  let sql = "delete from books where id=?";
-  conn.query(sql, [id], (error, result) => {
+router.get("/delbook", (req, res) => {
+  let id = req.query.id;
+  console.log(id);
+  conn.query(`delete from books where id in (${id})`, (error, result) => {
     if (error) return "失败"
     console.log("删除成功");
     res.send({
@@ -51,6 +55,17 @@ router.post("/updatebook", (req, res) => {
     })
   })
 })
+
+router.get("/bookDetail",(req,res)=>{
+  let id = req.query.id;
+  conn.query(`select * from books where id = ${id}`,(error,result)=>{
+    if (error) return "失败";
+    res.send({
+      msg:result
+    })
+  })
+})
+
 
 //导出
 module.exports = router;
