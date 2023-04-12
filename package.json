@@ -20,6 +20,7 @@
     "js-tokens": "^4.0.0",
     "lodash": "^4.17.21",
     "loose-envify": "^1.4.0",
+    "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "rc-field-form": "^1.27.1",
     "rc-util": "^5.23.0",

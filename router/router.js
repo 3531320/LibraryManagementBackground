@@ -1,6 +1,7 @@
 const express = require("express");
 const conn = require('../mysql.js');
 const router = express.Router();
+const moment = require('moment')
 //创建一个路由容器
 router.get('/getpost', (req, res) => {
   let name = req.query.name;
@@ -9,7 +10,11 @@ router.get('/getpost', (req, res) => {
     sql = "select * from books where name like ? ";
   }
   conn.query(sql, ["%"+name+"%"],(error, result) => {
-    if (error) return "查询失败"
+    if (error) return "查询失败";
+    result.forEach(item=>{
+      item.createTime = moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
+      item.updateTime = item.updateTime?moment(item.updateTime).format("YYYY-MM-DD HH:mm:ss"):"";
+    })
     res.send({
       msg: result
     })
